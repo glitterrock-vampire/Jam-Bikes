@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,6 +11,7 @@ class _HomePageState extends State<HomePage> {
     false,
     false
   ]; // Track the favorite state of each bike
+  int selectedIndex = 0; // Track the selected index for category tabs
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           CircleAvatar(
-            backgroundImage: AssetImage('assets/avatar.jpg'),
+            backgroundImage: AssetImage('assets/Avatarme.jpg'),
           ),
           SizedBox(width: 16),
         ],
@@ -51,9 +53,9 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.grey),
               ),
               SizedBox(height: 20),
-              _buildSearchBar(),
+              _buildSearchBar(), // Updated search bar with no icon background and grey text
               SizedBox(height: 20),
-              _buildCategoryTabs(),
+              _buildCategoryTabs(), // Updated category tabs with selection and hover effect
               SizedBox(height: 20),
               _buildBikeList(context),
               SizedBox(height: 20),
@@ -82,31 +84,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSearchBar() {
-    return Stack(
+    return Row(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: Colors.grey[400]!, width: 1.5),
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Find motorcycle, etc',
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+        Expanded(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10), // Less rounded edges
+              border:
+                  Border.all(color: Colors.grey[300]!, width: 1), // Less border
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Find motorcycle, etc',
+                  hintStyle:
+                      TextStyle(color: Colors.grey[500]), // Slightly grey text
+                  border: InputBorder.none,
+                ),
+              ),
             ),
           ),
         ),
-        Positioned(
-          right: 10,
-          top: 12,
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(Icons.search, color: Color(0xFFC1C1C1)),
-          ),
-        ),
+        SizedBox(width: 10), // Space between search bar and icon
+        Icon(Icons.search,
+            color: Color(0xFFC1C1C1)), // No background for the search icon
       ],
     );
   }
@@ -115,32 +118,43 @@ class _HomePageState extends State<HomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Expanded(child: _buildCategoryTab('Favorite', true)),
-        Expanded(child: _buildCategoryTab('Recommended', false)),
-        Expanded(child: _buildCategoryTab('Nearby', false)),
-        Expanded(child: _buildCategoryTab('Best Motorcycle', false)),
+        _buildCategoryTab('Favorite', 0),
+        _buildCategoryTab('Recommended', 1),
+        _buildCategoryTab('Nearby', 2),
+        _buildCategoryTab('Best Motorcycle', 3),
       ],
     );
   }
 
-  Widget _buildCategoryTab(String title, bool selected) {
-    return Container(
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: selected ? Colors.blue[900] : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Text(
-        title,
-        style: TextStyle(
-          color: selected ? Colors.white : Colors.black,
-          fontWeight: selected ? FontWeight.bold : FontWeight.normal,
-          fontFamily: 'Roboto',
-          fontSize: 14,
+  Widget _buildCategoryTab(String title, int index) {
+    bool isSelected = selectedIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      child: Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? const Color.fromARGB(255, 25, 96, 203)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
         ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            fontFamily: 'Roboto',
+            fontSize: 14,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }
@@ -148,20 +162,22 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBikeList(BuildContext context) {
     return Center(
       child: Container(
-        height: 220,
+        height:
+            260, // Adjusted height to ensure the bikes fit with the description
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildBikeCard('assets/yhbike1.png', 0),
+            _buildBikeCard('assets/yhbike1.png', 0, scale: 1.0),
             SizedBox(width: 16),
-            _buildBikeCard('assets/yhbike2.png', 1),
+            _buildBikeCard('assets/yhbike2.png', 1,
+                scale: 0.9), // Adjusted scale
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBikeCard(String imagePath, int index) {
+  Widget _buildBikeCard(String imagePath, int index, {double scale = 1.0}) {
     return Container(
       width: 160,
       decoration: BoxDecoration(
@@ -181,9 +197,58 @@ class _HomePageState extends State<HomePage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.asset(imagePath, height: 140, fit: BoxFit.cover),
+              Transform.scale(
+                scale: scale, // Scale the image
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child:
+                      Image.asset(imagePath, height: 140, fit: BoxFit.contain),
+                ),
+              ),
+              SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "Model XYZ",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "Electric Bike",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: RatingBar.builder(
+                  initialRating: 4,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 16.0,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                ),
               ),
             ],
           ),
@@ -197,14 +262,10 @@ class _HomePageState extends State<HomePage> {
                       !isFavorite[index]; // Toggle favorite state
                 });
               },
-              child: CircleAvatar(
-                backgroundColor: Colors.white.withOpacity(0.6),
-                radius: 16, // Make the circle smaller
-                child: Icon(
-                  isFavorite[index] ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite[index] ? Colors.red : Colors.black,
-                  size: 16,
-                ),
+              child: Icon(
+                isFavorite[index] ? Icons.favorite : Icons.favorite_border,
+                color: isFavorite[index] ? Colors.red : Colors.black,
+                size: 24,
               ),
             ),
           ),
