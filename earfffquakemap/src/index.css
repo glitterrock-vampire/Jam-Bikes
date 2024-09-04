@@ -1,0 +1,176 @@
+/* Import Google Font 'Baloo' */
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap");
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1600px; /* Increased max-width for larger map on desktop */
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+}
+
+.title {
+  font-family: "Baloo 2", cursive; /* Fun and bubbly font */
+  font-size: 4em; /* Larger font size */
+  color: transparent; /* No color, just the outline */
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000; /* Black outline */
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+/* Filter container styling */
+.filter-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Add space between filter and button */
+  margin-bottom: 20px;
+}
+
+.filter-container {
+  margin-bottom: 0;
+}
+
+label {
+  font-size: 1.4em;
+  color: #00ccff; /* Changed text color */
+  margin-right: 10px;
+}
+
+.select-dropdown {
+  padding: 10px;
+  font-size: 1.1em;
+  border: 1px solid #ccc;
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.select-dropdown:hover {
+  background-color: #e2e6ea;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Map container styling */
+.styled-map {
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  animation: mapFadeIn 0.8s ease-out;
+  width: 100%; /* Adjusted width to 100% */
+  height: 600px; /* Kept the height as is */
+}
+
+.animated-marker {
+  transition: transform 0.3s ease-in-out;
+}
+
+.animated-marker:hover {
+  transform: scale(1.2);
+}
+
+.popup-content {
+  font-size: 1.2em;
+  line-height: 1.5;
+  animation: popupSlideIn 0.5s ease-out;
+}
+
+/* Keyframes for animation */
+@keyframes popupSlideIn {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes mapFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Media Queries for Mobile Optimization */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    max-width: 100%; /* Adjust max-width for mobile */
+  }
+
+  .title {
+    font-size: 2.5em; /* Decrease font size on mobile */
+  }
+
+  .filter-button-container {
+    flex-direction: column; /* Stack filters vertically */
+    gap: 10px; /* Reduce gap for mobile */
+  }
+
+  label {
+    font-size: 1.2em; /* Smaller label text on mobile */
+  }
+
+  .select-dropdown {
+    padding: 8px; /* Smaller dropdown padding on mobile */
+    font-size: 1em;
+  }
+
+  .styled-map {
+    height: 400px; /* Decrease map height for mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2em; /* Further decrease title size for smaller screens */
+    letter-spacing: 1px;
+  }
+
+  label {
+    font-size: 1em; /* Further decrease label size */
+  }
+
+  .select-dropdown {
+    padding: 6px; /* Smaller dropdown padding on smaller devices */
+    font-size: 0.9em;
+  }
+
+  .styled-map {
+    height: 350px; /* Adjust map height for smaller devices */
+  }
+}
